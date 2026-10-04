@@ -1,0 +1,35 @@
+name: Otomatik Blog Paylaşımı (Günde 2 Kez)
+
+on:
+  schedule:
+    # UTC Saatiyle 08:00 ve 18:00 (Türkiye saatiyle 11:00 ve 21:00)
+    - cron: '0 8,18 * * *'
+  workflow_dispatch: # İstediğin an manuel tetiklemek için
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Depoyu Çek
+        uses: actions/checkout@v3
+
+      - name: Python Kur
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Kütüphaneleri Yükle
+        run: pip install requests
+
+      - name: Makale Üret
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python generate_post.py
+
+      - name: Değişiklikleri GitHub'a Gönder
+        run: |
+          git config --global user.name "GNDG Auto Bot"
+          git config --global user.email "bot@gndg.com"
+          git add posts.json
+          git commit -m "Auto: Yeni yapay zeka makalesi eklendi" || exit 0
+          git push
