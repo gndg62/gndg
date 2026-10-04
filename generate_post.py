@@ -3,7 +3,7 @@ import json
 import requests
 from datetime import datetime
 
-GEMINI_API_KEY = os.environ.get("AQ.Ab8RN6LEmT1Hjz6O_td-z4dJvIodJcwLHa59G1X6xVjce6_bQw")
+GEMINI_API_KEY = os.environ.get("AQ.Ab8RN6LNJc-BvdM10YqIV-0HxehmWJBjL4dvM283UuqFyRanEA")
 URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
 
 prompt = """
