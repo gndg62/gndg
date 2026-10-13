@@ -1,0 +1,33 @@
+name: Otomatik Makale Yayınla
+
+on:
+  schedule:
+    # Her gün Türkiye saati ile sabah 09:00'da çalışır (UTC 06:00)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Manuel olarak istediğiniz zaman test edebilirsiniz
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodları Çek
+        uses: actions/checkout@v3
+
+      - name: Python Kur
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Gerekli Kütüphaneleri Yükle
+        run: |
+          pip install google-generativeai firebase-admin
+
+      - name: Firebase Anahtarını Oluştur
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > serviceAccountKey.json
+
+      - name: Makale Üret ve Yayınla
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python auto_publisher.py
